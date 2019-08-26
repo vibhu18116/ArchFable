@@ -45,6 +45,8 @@ class Game{
 			case 2:
 				existing_user();
 				return;
+			default:
+				System.out.println("Invalid query");
 		}
 
 	}
@@ -60,6 +62,7 @@ class Game{
 		for (int i = 0; i<_users.size(); i++){
 			if (_users.get(i).getName().equals(name)){
 				System.out.println("User found... Logging in");
+				_users.get(i).logging();
 				return;
 			}
 		}

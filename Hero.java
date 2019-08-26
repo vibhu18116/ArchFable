@@ -1,3 +1,10 @@
+import java.util.Scanner;
+
+interface Hero_powers{
+
+	public void specialAttack();
+}
+
 class Hero{
 
 	protected int num_moves = 0;
@@ -6,6 +13,8 @@ class Hero{
 	private int currentLevel = 1;
 	private int attack;
 	private int defense;
+	private boolean specialAttack = false;
+	private Scanner sc = new Scanner(System.in);
 
 	protected Hero(int attack, int defense){
 		this.attack = attack;
@@ -19,11 +28,49 @@ class Hero{
 	protected int defense(){
 		return defense;
 	}
-	// public abstract int special_power();
+
+	protected int fightOptions(){
+
+		while (true){
+			System.out.println("Choose move:");
+			int count = 0;
+			System.out.println(++count + ") Attack");
+			System.out.println(++count + ") Defense");
+
+			if (specialAttack){
+				System.out.println(++count + ") Special Attack");
+			}
+
+			num_moves++;
+
+			if (num_moves%4 == 0 && !specialAttack){
+				num_moves = 0;
+				specialAttack = true;
+			}
+
+			int chosen = sc.nextInt();
+
+			if (chosen<1 || chosen>count){
+				System.out.println("Invalid option. Choose again.");
+			}else{
+				switch(chosen){
+					case(1):
+						this.attack();
+
+					case(2):
+						this.defense();
+
+					// case(3):
+
+				}
+			}
+
+		}
+	}
 }
 
 
-class Warrior extends Hero{
+class Warrior extends Hero implements Hero_powers{
 
 	Warrior(){
 		super(10, 3);
@@ -33,9 +80,12 @@ class Warrior extends Hero{
 		return "Warrior";
 	}
 
+	@Override
+	
+
 }
 
-class Mage extends Hero{
+class Mage extends Hero implements Hero_powers{
 
 	Mage(){
 		super(5, 5);
@@ -47,7 +97,7 @@ class Mage extends Hero{
 
 }
 
-class Thief extends Hero{
+class Thief extends Hero implements Hero_powers{
 
 	Thief(){
 		super(6, 4);
@@ -59,7 +109,7 @@ class Thief extends Hero{
 
 }
 
-class Healer extends Hero{
+class Healer extends Hero implements Hero_powers{
 
 	Healer(){
 		super(4, 8);
