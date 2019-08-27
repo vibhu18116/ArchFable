@@ -12,7 +12,7 @@ abstract class Hero{
 	private double initialHP = 100;
 	protected double HP = 100;
 	private int XP = 0;
-	private int currentLevel = 1;
+	protected int currentLevel = 1;
 	protected int attack;
 	protected int defense;
 	protected boolean specialAttack = false;
@@ -46,8 +46,9 @@ abstract class Hero{
 		this.defense = defense;
 	}
 
-	void attacked(double pow){
+	double attacked(double pow){
 		this.HP -= pow;
+		return this.HP;
 	}
 
 	protected void attack(Monster m){
@@ -94,16 +95,21 @@ abstract class Hero{
 		}
 	}
 
-	protected void fightOptions(Monster enemy){
+	protected int fightOptions(Monster enemy){
 
 		int start = 0;
 
 		while (true){
 			if (res == -1){
 				levelUp(enemy);
-				System.out.println("Proceed to next Location");
-				return;
+				return 1;
 			}
+
+			if (this.HP<=0){
+				System.out.println("Monster killed you!");
+				return -1;
+			}
+
 			System.out.println("Choose move:");
 			int count = 0;
 			System.out.println(++count + ") Attack");
@@ -144,7 +150,7 @@ abstract class Hero{
 
 					case(-1):
 						System.out.println("Exiting");
-						return;
+						return 0;
 				}
 			}
 
@@ -247,6 +253,15 @@ class Thief extends Hero implements Hero_powers{
 			return;
 		}
 		super.HP += stolen;
+		if (super.HP > 100 && currentLevel ==1){
+			super.HP = 100;
+		}else if (super.HP > 150 && currentLevel ==2){
+			super.HP = 150;
+		}else if (super.HP > 200 && currentLevel ==3){
+			super.HP = 200;
+		}else if (super.HP > 250 && currentLevel ==4){
+			super.HP = 250;
+		}
 		System.out.println("You stole " + df.format(stolen) + " HP from the monster!");
 		System.out.println(this.healthProfile(enemy));
 		enemy.attack(this);

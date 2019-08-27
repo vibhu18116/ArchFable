@@ -70,8 +70,11 @@ class Monster{
 
 		System.out.println("The monster attacked and inflicted " + df.format(attackPow) 
 							+ " damage to you.");
-		victim.attacked(attackPow);
+		double victim_health = victim.attacked(attackPow);
 
+		if (victim_health<=0){
+			return;
+		}
 		System.out.println(victim.healthProfile(this));
 	}
 
