@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 interface Hero_powers{
 
-	public void specialAttack();
+	public void specialAttack(Monster enemy);
 }
 
 class Hero{
@@ -29,7 +29,7 @@ class Hero{
 		return defense;
 	}
 
-	protected int fightOptions(){
+	protected int fightOptions(Monster enemy){
 
 		while (true){
 			System.out.println("Choose move:");
@@ -60,8 +60,8 @@ class Hero{
 					case(2):
 						this.defense();
 
-					// case(3):
-
+					case(3):
+						this.specialAttack();
 				}
 			}
 
@@ -81,7 +81,15 @@ class Warrior extends Hero implements Hero_powers{
 	}
 
 	@Override
-	
+	public void specialAttack(Monster enemy){
+		int bonus_moves = 3;
+		int bonus_attack = 5;
+		int bonus_defense = 5;
+
+		for (int i = 0; i<bonus_moves; i++){
+			//implement
+		}
+	}
 
 }
 
@@ -93,6 +101,11 @@ class Mage extends Hero implements Hero_powers{
 
 	public String toString(){
 		return "Mage";
+	}
+
+	@Override
+	public void specialAttack(Monster enemy){
+		
 	}
 
 }
@@ -107,6 +120,11 @@ class Thief extends Hero implements Hero_powers{
 		return "Thief";
 	}
 
+	@Override
+	public void specialAttack(Monster enemy){
+		
+	}
+
 }
 
 class Healer extends Hero implements Hero_powers{
@@ -117,6 +135,11 @@ class Healer extends Hero implements Hero_powers{
 
 	public String toString(){
 		return "Healer";
+	}
+
+	@Override
+	public void specialAttack(Monster enemy){
+		
 	}
 
 }

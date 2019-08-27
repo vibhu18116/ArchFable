@@ -7,6 +7,14 @@ class Monster{
 		return this.level;
 	}
 
+	public void attacked(int power){
+		int temp = this.HP - power;
+
+		if (temp>=0){
+			this.HP = temp;
+		}
+	}
+
 }
 
 class Goblins extends Monster{
@@ -20,7 +28,7 @@ class Goblins extends Monster{
 class Zombies extends Monster{
 
 	Zombies(){
-		this.HP = 100;
+		this.HP = 150;
 		this.level = 2;
 	}
 	
@@ -29,7 +37,7 @@ class Zombies extends Monster{
 class Fiends extends Monster{
 	
 	Fiends(){
-		this.HP = 100;
+		this.HP = 200;
 		this.level = 3;
 	}
 }
@@ -37,7 +45,7 @@ class Fiends extends Monster{
 class Lionfang extends Monster{
 
 	Lionfang(){
-		this.HP = 100;
+		this.HP = 250;
 		this.level = 4;
 	}
 	
