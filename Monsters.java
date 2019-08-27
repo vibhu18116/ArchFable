@@ -32,6 +32,7 @@ class Monster{
 			this.HP = temp;
 		}else{
 			System.out.println("Monster killed!");
+			this.HP = initialHP;
 			return -1;
 		}
 

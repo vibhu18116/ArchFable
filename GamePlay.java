@@ -50,7 +50,11 @@ class GamePlay{
 		while (true){
 			if (next == 1){
 				System.out.println("Proceed to next Location");
-				possibleLocations(currentLocation);
+				Monster success = possibleLocations(currentLocation);
+				if (success == null)
+					break;
+				else
+					myHero.fightOptions(success);
 			}else{
 				return;
 			}
@@ -58,7 +62,7 @@ class GamePlay{
 
 	}
 
-	private void possibleLocations(int start){
+	private Monster possibleLocations(int start){
 
 		ArrayList<Node> neighbours = layout.getGraph().getNeighbours(start);
 
@@ -78,15 +82,16 @@ class GamePlay{
 
 		if (chosen > count || chosen<1 && chosen != -1){
 			System.out.println("Invalid option. Exiting...");
-			return;
+			return null;
 		}
 
 		if (chosen == -1){
 			System.out.println("Exiting...");
-			return;
+			return null;
 		}
 
 		System.out.println("Moving to location " + neighbours.get(chosen-1).getLabel());
 		currentLocation = neighbours.get(chosen-1).getLabel() + 1;
+		return neighbours.get(chosen-1).getEnemy();
 	}
 }

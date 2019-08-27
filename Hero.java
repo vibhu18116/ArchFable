@@ -102,11 +102,15 @@ abstract class Hero{
 		while (true){
 			if (res == -1){
 				levelUp(enemy);
+				res = 0;
 				return 1;
 			}
 
 			if (this.HP<=0){
 				System.out.println("Monster killed you!");
+				this.HP = 100;
+				this.XP = 0;
+				this.currentLevel = 1;
 				return -1;
 			}
 
