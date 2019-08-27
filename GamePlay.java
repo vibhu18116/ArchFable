@@ -41,7 +41,8 @@ class GamePlay{
 	}
 
 	private void startFight(Monster mons){
-		System.out.println("Fight Started. Your fighting a level " + mons.getLevel() + " Monster");
+		System.out.println("Fight Started. You are fighting a level " + mons.getLevel() + " Monster");
+		myHero.fightOptions(mons);
 	}
 
 	private void possibleLocations(boolean start){
