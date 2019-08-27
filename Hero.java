@@ -6,7 +6,7 @@ interface Hero_powers{
 	public void specialAttack(Monster enemy);
 }
 
-class Hero{
+abstract class Hero{
 
 	protected int num_moves = 0;
 	private double initialHP = 100;
@@ -15,10 +15,11 @@ class Hero{
 	private int currentLevel = 1;
 	protected int attack;
 	protected int defense;
-	private boolean specialAttack = false;
+	protected boolean specialAttack = false;
 	private Scanner sc = new Scanner(System.in);
-	private static DecimalFormat df = new DecimalFormat("0.00");
+	protected static DecimalFormat df = new DecimalFormat("0.00");
 	private boolean defenseON = false;
+	protected int res = 0;
 
 	boolean checkIfDefending(){
 		return defenseON;
@@ -51,7 +52,10 @@ class Hero{
 
 	protected void attack(Monster m){
 		System.out.println("You attacked and inflicted "+ this.attack + " damage to the monster.");
-		m.attacked(attack);
+		res = m.attacked(attack);
+		if (res == -1){
+			return;
+		}
 		System.out.println(this.healthProfile(m));
 		m.attack(this);
 	}
@@ -64,23 +68,55 @@ class Hero{
 		defenseON = false;
 	}
 
-	protected void specialAttack(){}
+	protected abstract void specialAttack(Monster m);
+
+	private void levelUp(Monster m){
+		this.XP += m.getLevel()*20;
+		System.out.println(this.XP + " XP awarded.");
+
+		if (this.XP >= 20 && currentLevel == 1){
+				currentLevel = 2;
+				this.XP = 0;
+				this.HP = 150;
+				System.out.println("Level Up: " + currentLevel);
+		}
+		else if (this.XP >= 40 && currentLevel == 2){
+				currentLevel = 3;
+				this.XP = 0;
+				this.HP = 200;
+				System.out.println("Level Up: " + currentLevel);
+		}
+		else if (this.XP >= 60 && currentLevel == 3){
+				currentLevel = 4;
+				this.XP = 0;
+				this.HP = 250;
+				System.out.println("Level Up: " + currentLevel);
+		}
+	}
 
 	protected void fightOptions(Monster enemy){
 
+		int start = 0;
+
 		while (true){
+			if (res == -1){
+				levelUp(enemy);
+				System.out.println("Proceed to next Location");
+				return;
+			}
 			System.out.println("Choose move:");
 			int count = 0;
 			System.out.println(++count + ") Attack");
 			System.out.println(++count + ") Defense");
 
-			if (specialAttack){
-				System.out.println(++count + ") Special Attack");
+			if (num_moves%4 == 3 && !specialAttack && num_moves>=0){
+				specialAttack = true;
 			}
 
-			if (num_moves%4 == 3 && !specialAttack){
-				num_moves = 0;
-				specialAttack = true;
+			// System.out.println(num_moves);
+
+			if (specialAttack && num_moves>=0){
+				System.out.println(++count + ") Special Attack");
 			}
 
 			int chosen = sc.nextInt();
@@ -102,7 +138,8 @@ class Hero{
 
 					case(3):
 						System.out.println("Special attack activated.");
-						this.specialAttack();
+						specialAttack(enemy);
+						this.specialAttack = false;
 						break;
 
 					case(-1):
@@ -132,24 +169,29 @@ class Warrior extends Hero implements Hero_powers{
 		int bonus_moves = 3;
 		int bonus_attack = 5;
 		int bonus_defense = 5;
+		this.num_moves = -4;
 
-		int attack_temp = this.attack; 
-		int defense_temp = this.defense;
+		// int attack_temp = this.attack; 
+		// int defense_temp = this.defense;
+		super.specialAttack = true;
 
-		this.attack += 3;
-		this.defense += 3;
+		super.attack += 3;
+		super.defense += 3;
 
 		System.out.println(this.healthProfile(enemy));
 		
 		for (int i = 0; i<bonus_moves; i++){
 			super.fightOptions(enemy);
-			this.num_moves = 0;
 		}
 
 		System.out.println("Special power deactivated.");
 
-		this.attack = attack_temp;
-		this.defense = defense_temp;
+		// super.attack = attack_temp;
+		// super.defense = defense_temp;
+		super.attack -= 3;
+		super.defense -= 3;
+		super.specialAttack = false;
+		this.num_moves = 0;
 	}
 
 }
@@ -170,7 +212,10 @@ class Mage extends Hero implements Hero_powers{
 		for (int i = 0; i<3; i++){
 			double mons_temp_HP = enemy.getHP();
 			double toReduce = mons_temp_HP*(0.05);
-			enemy.attacked(toReduce);
+			res = enemy.attacked(toReduce);
+			if (res == -1){
+				return;
+			}
 			System.out.println(this.healthProfile(enemy));
 
 			super.fightOptions(enemy);
@@ -195,7 +240,19 @@ class Thief extends Hero implements Hero_powers{
 
 	@Override
 	public void specialAttack(Monster enemy){
-		
+		double enemy_pow = enemy.getHP();
+		double stolen = enemy_pow*0.3;
+		res = enemy.attacked(stolen);
+		if (res == -1){
+			return;
+		}
+		super.HP += stolen;
+		System.out.println("You stole " + df.format(stolen) + " HP from the monster!");
+		System.out.println(this.healthProfile(enemy));
+		enemy.attack(this);
+		// System.out.println(this.healthProfile(enemy));
+		System.out.println("Special power deactivated");
+
 	}
 
 }

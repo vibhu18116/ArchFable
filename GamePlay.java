@@ -46,6 +46,6 @@ class GamePlay{
 	}
 
 	private void possibleLocations(boolean start){
-
+		
 	}
 }

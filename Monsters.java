@@ -25,14 +25,17 @@ class Monster{
 		return df.format(this.HP) + "/" + this.initialHP;
 	}
 
-	public void attacked(double power){
+	public int attacked(double power){
 		double temp = this.HP - power;
 
 		if (temp>=0){
 			this.HP = temp;
 		}else{
 			System.out.println("Monster killed!");
+			return -1;
 		}
+
+		return 0;
 	}
 
 	protected void attack(Hero victim){
