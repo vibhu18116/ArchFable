@@ -32,6 +32,9 @@ class Monster{
 			this.HP = temp;
 		}else{
 			System.out.println("Monster killed!");
+			if (this.level == 4){
+				System.out.println("You won the game. \n You are now in the exploration mode.");
+			}
 			this.HP = initialHP;
 			return -1;
 		}

@@ -6,9 +6,6 @@ class Game{
 	private static Scanner sc = new Scanner(System.in);
 	private static ArrayList<User> _users = new ArrayList<>();
 
-	Game(){
-	}
-
 	protected void start(){
 		this.startMenu();
 	}

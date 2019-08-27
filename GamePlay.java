@@ -50,11 +50,13 @@ class GamePlay{
 		while (true){
 			if (next == 1){
 				System.out.println("Proceed to next Location");
-				Monster success = possibleLocations(currentLocation);
+				Monster success = possibleLocations(currentLocation, mons);
 				if (success == null)
 					break;
-				else
+				else{
+					System.out.println("Fight Started. You are fighting a level " + success.getLevel() + " Monster");
 					myHero.fightOptions(success);
+				}
 			}else{
 				return;
 			}
@@ -62,7 +64,7 @@ class GamePlay{
 
 	}
 
-	private Monster possibleLocations(int start){
+	private Monster possibleLocations(int start, Monster m){
 
 		ArrayList<Node> neighbours = layout.getGraph().getNeighbours(start);
 
@@ -76,6 +78,8 @@ class GamePlay{
 				System.out.println(++count + ") Go to initial location");
 		}
 
+		++count;
+		System.out.println(count + ") Go Back");
 
 		System.out.println("Enter -1 to exit.");
 		int chosen = sc.nextInt();
@@ -90,8 +94,13 @@ class GamePlay{
 			return null;
 		}
 
+		if (chosen == count){
+			System.out.println("Moving Back");
+			return m;
+		}
+
 		System.out.println("Moving to location " + neighbours.get(chosen-1).getLabel());
-		currentLocation = neighbours.get(chosen-1).getLabel() + 1;
+		currentLocation = neighbours.get(chosen-1).getLabel();
 		return neighbours.get(chosen-1).getEnemy();
 	}
 }

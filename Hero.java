@@ -79,18 +79,21 @@ abstract class Hero{
 				currentLevel = 2;
 				this.XP = 0;
 				this.HP = 150;
+				this.initialHP = 150;
 				System.out.println("Level Up: " + currentLevel);
 		}
 		else if (this.XP >= 40 && currentLevel == 2){
 				currentLevel = 3;
 				this.XP = 0;
 				this.HP = 200;
+				this.initialHP = 200;
 				System.out.println("Level Up: " + currentLevel);
 		}
 		else if (this.XP >= 60 && currentLevel == 3){
 				currentLevel = 4;
 				this.XP = 0;
 				this.HP = 250;
+				this.initialHP = 250;
 				System.out.println("Level Up: " + currentLevel);
 		}
 	}
