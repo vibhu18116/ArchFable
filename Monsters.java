@@ -2,7 +2,7 @@ import java.util.Random;
 import java.lang.Math;
 import java.text.DecimalFormat;
 
-class Monster{
+abstract class Monster{
 
 	protected double HP = 100;
 	protected int level;
