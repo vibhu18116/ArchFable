@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 interface Hero_powers{
 
@@ -20,6 +21,11 @@ abstract class Hero{
 	protected static DecimalFormat df = new DecimalFormat("0.00");
 	private boolean defenseON = false;
 	protected int res = 0;
+	protected ArrayList<SideKick> _sidekicks = new ArrayList<SideKick>();
+
+	int getXP(){
+		return XP;
+	}
 
 	boolean checkIfDefending(){
 		return defenseON;
@@ -39,6 +45,48 @@ abstract class Hero{
 
 	double getHP(){
 		return HP;
+	}
+
+	int purchaseMinion(int sp){
+		if (sp>this.XP){
+			System.out.println("Sorry!! You are claiming more XP than you have!");
+		}else{
+			if (sp>Minion.getBaseCost()){
+				Minion newMinion = new Minion(sp);
+				_sidekicks.add(newMinion);
+				return 1;
+			}else{
+				System.out.println("You don't have enough XP");
+			}
+		}
+		return 0;
+	}
+
+	protected void purchaseSideKick(){
+		System.out.println("Your current XP is " + this.getXP());
+		System.out.println("If you want to buy a minion, press 1.");
+		System.out.println("If you want to buy a knight, press 2.");
+		int skOption = sc.nextInt();
+
+		System.out.print("XP to spend: ");
+		int exchangeXP = sc.nextInt();
+
+		int success = 0;
+
+		if (skOption == 1){
+			success = this.purchaseMinion(exchangeXP);
+		}else{
+
+		}
+
+		if (!success){
+
+		}else{
+			SideKick purchased = _sidekicks.get(_sidekicks.size()-1);
+			System.out.println("You bought a sidekick: " + purchased.getClass());
+			System.out.println("XP of sidekick: " + purchased.getXP());
+			System.out.println("Attack of sidekick is " + purchased.getPower());
+		}
 	}
 
 	protected Hero(int attack, int defense){

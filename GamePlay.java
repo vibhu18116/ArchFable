@@ -50,6 +50,13 @@ class GamePlay{
 		while (true){
 			if (next == 1){
 				System.out.println("Proceed to next Location");
+				System.out.println("If you would like to buy a sidekick, type yes. Else type no to upgrade level.");
+				String answer = sc.nextLine();
+
+				if (answer.equals("yes")){
+					myHero.purchaseSideKick();
+				}
+
 				Monster success = possibleLocations(currentLocation, mons);
 				if (success == null)
 					break;

@@ -2,9 +2,13 @@ abstract class SideKick{
 
 	private int XP;
 	private int HP = 100;
-	private int attackPower;
+	private float attackPower;
 
-	protected SideKick(int attackPower){
+	private float getPower(){
+		return attackPower;
+	}
+
+	protected SideKick(float attackPower){
 		this.attackPower = attackPower;
 	}
 
@@ -42,11 +46,18 @@ abstract class SideKick{
 
 class Minion extends SideKick implements Cloneable{
 
-	private int baseCost = 5;
+	private final int baseCost = 5;
 	private boolean powerUsed = false;
+	private Minion clones[] = new Minion[3];
 
-	Minion(){
-		super(1);
+	Minion(int price){
+
+		if (price > baseCost){
+			price -= baseCost;
+
+		}
+
+		super(1 + price*0.5);
 	}
 
 	@Override
@@ -64,8 +75,17 @@ class Minion extends SideKick implements Cloneable{
 		if (powerUsed){
 			System.out.println("Sorry! You have already used the cloning ability");
 		}else{
-			//cloning
+			for (int i = 0; i<3; i++){
+				clones[i] = this.clone();
+			}
+
+			System.out.println("Cloning Done.");
 		}
+	}
+
+
+	static int getBaseCost(){
+		return baseCost;
 	}
 
 }
@@ -73,7 +93,7 @@ class Minion extends SideKick implements Cloneable{
 
 class Knight extends SideKick{
 
-	private int baseCost = 8;
+	private final int baseCost = 8;
 
 	Knight(){
 		super(2);
@@ -88,6 +108,8 @@ class Knight extends SideKick{
 
 	}
 
-
+	static int getBaseCost(){
+		return baseCost;
+	}
 
 }
