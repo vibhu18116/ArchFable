@@ -51,7 +51,7 @@ class GamePlay{
 			if (next == 1){
 				System.out.println("Proceed to next Location");
 				System.out.println("If you would like to buy a sidekick, type yes. Else type no to upgrade level.");
-				String answer = sc.nextLine();
+				String answer = sc.next();
 
 				if (answer.equals("yes")){
 					myHero.purchaseSideKick();
@@ -62,6 +62,11 @@ class GamePlay{
 					break;
 				else{
 					System.out.println("Fight Started. You are fighting a level " + success.getLevel() + " Monster");
+					System.out.println("Type yes if you wish to use a sidekick, else type no.");
+					String use = sc.next();
+					if (use.equals("yes")){
+						myHero.activateSK();
+					}
 					myHero.fightOptions(success);
 				}
 			}else{

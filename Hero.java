@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 interface Hero_powers{
 
@@ -22,6 +23,14 @@ abstract class Hero{
 	private boolean defenseON = false;
 	protected int res = 0;
 	protected ArrayList<SideKick> _sidekicks = new ArrayList<SideKick>();
+	protected SideKick current_sidekick = null;
+	protected int thisLevelXP = 0;
+
+
+	protected Hero(int attack, int defense){
+		this.attack = attack;
+		this.defense = defense;
+	}
 
 	int getXP(){
 		return XP;
@@ -62,8 +71,41 @@ abstract class Hero{
 		return 0;
 	}
 
+	int purchaseKnight(int sp){
+		if (sp>this.XP){
+			System.out.println("Sorry!! You are claiming more XP than you have!");
+		}else{
+			if (sp>Minion.getBaseCost()){
+				Knight newMinion = new Knight(sp);
+				_sidekicks.add(newMinion);
+				return 1;
+			}else{
+				System.out.println("You don't have enough XP");
+			}
+		}
+		return 0;
+	}
+
+	protected void activateSK(){
+		Collections.sort(_sidekicks);
+		this.current_sidekick = _sidekicks.get(0);
+		System.out.println("You have a sidekick " + this.current_sidekick.getClass().getName()
+		+ " with you. Attack of sidekick is " + this.current_sidekick.getPower() + ".");
+
+		if (this.current_sidekick instanceof Minion){
+			System.out.println("Press c to use cloning ability. Else press f to move to the fight");
+			String ans = sc.next();
+
+			if (ans.equals("c")){
+				this.current_sidekick.specialMove();
+			}
+		}else{
+			this.current_sidekick = (Knight) this.current_sidekick;
+		}
+	}
+
 	protected void purchaseSideKick(){
-		System.out.println("Your current XP is " + this.getXP());
+		System.out.println("Your current XP is " + this.XP);
 		System.out.println("If you want to buy a minion, press 1.");
 		System.out.println("If you want to buy a knight, press 2.");
 		int skOption = sc.nextInt();
@@ -76,23 +118,20 @@ abstract class Hero{
 		if (skOption == 1){
 			success = this.purchaseMinion(exchangeXP);
 		}else{
-
+			success = this.purchaseKnight(exchangeXP);
 		}
 
-		if (!success){
+		if (success == 0){
 
 		}else{
 			SideKick purchased = _sidekicks.get(_sidekicks.size()-1);
-			System.out.println("You bought a sidekick: " + purchased.getClass());
+			System.out.println("You bought a sidekick: " + purchased.getClass().getName());
 			System.out.println("XP of sidekick: " + purchased.getXP());
 			System.out.println("Attack of sidekick is " + purchased.getPower());
 		}
 	}
 
-	protected Hero(int attack, int defense){
-		this.attack = attack;
-		this.defense = defense;
-	}
+	
 
 	double attacked(double pow){
 		this.HP -= pow;
@@ -102,6 +141,9 @@ abstract class Hero{
 	protected void attack(Monster m){
 		System.out.println("You attacked and inflicted "+ this.attack + " damage to the monster.");
 		res = m.attacked(attack);
+		if (this.current_sidekick != null){
+			res = this.current_sidekick.attack(m, res);
+		}
 		if (res == -1){
 			return;
 		}
@@ -121,25 +163,26 @@ abstract class Hero{
 
 	private void levelUp(Monster m){
 		this.XP += m.getLevel()*20;
-		System.out.println(this.XP + " XP awarded.");
+		this.thisLevelXP += m.getLevel()*20;
+		System.out.println(m.getLevel()*20 + " XP awarded.");
 
-		if (this.XP >= 20 && currentLevel == 1){
+		if (this.thisLevelXP >= 20 && currentLevel == 1){
 				currentLevel = 2;
-				this.XP = 0;
+				this.thisLevelXP = 0;
 				this.HP = 150;
 				this.initialHP = 150;
 				System.out.println("Level Up: " + currentLevel);
 		}
-		else if (this.XP >= 40 && currentLevel == 2){
+		else if (this.thisLevelXP >= 40 && currentLevel == 2){
 				currentLevel = 3;
-				this.XP = 0;
+				this.thisLevelXP = 0;
 				this.HP = 200;
 				this.initialHP = 200;
 				System.out.println("Level Up: " + currentLevel);
 		}
-		else if (this.XP >= 60 && currentLevel == 3){
+		else if (this.thisLevelXP >= 60 && currentLevel == 3){
 				currentLevel = 4;
-				this.XP = 0;
+				this.thisLevelXP = 0;
 				this.HP = 250;
 				this.initialHP = 250;
 				System.out.println("Level Up: " + currentLevel);
