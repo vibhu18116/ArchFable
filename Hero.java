@@ -69,7 +69,7 @@ abstract class Hero{
 		if (sp>this.XP){
 			System.out.println("Sorry!! You are claiming more XP than you have!");
 		}else{
-			if (sp>Minion.getBaseCost()){
+			if (sp>=Minion.getBaseCost()){
 				Minion newMinion = new Minion(sp);
 				_sidekicks.add(newMinion);
 				return 1;
@@ -84,9 +84,9 @@ abstract class Hero{
 		if (sp>this.XP){
 			System.out.println("Sorry!! You are claiming more XP than you have!");
 		}else{
-			if (sp>Minion.getBaseCost()){
-				Knight newMinion = new Knight(sp);
-				_sidekicks.add(newMinion);
+			if (sp>=Knight.getBaseCost()){
+				Knight newKnight = new Knight(sp);
+				_sidekicks.add(newKnight);
 				return 1;
 			}else{
 				System.out.println("You don't have enough XP");
@@ -134,13 +134,14 @@ abstract class Hero{
 
 		if (skOption == 1){
 			success = this.purchaseMinion(exchangeXP);
-		}else{
+		}else if (skOption == 2){
 			success = this.purchaseKnight(exchangeXP);
+		}else{
+			System.out.println("Invalid option");
+			return;
 		}
 
-		if (success == 0){
-
-		}else{
+		if (success != 0){
 			SideKick purchased = _sidekicks.get(_sidekicks.size()-1);
 			this.XP -= exchangeXP;
 			System.out.println("You bought a sidekick: " + purchased.getClass().getName());

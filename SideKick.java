@@ -108,9 +108,8 @@ class Minion extends SideKick{
 		super(1);
 		if (price > baseCost){
 			price -= baseCost;
+			this.increasePower(price);
 		}
-
-		this.increasePower(price);
 	}
 
 	@Override
@@ -192,7 +191,7 @@ class Minion extends SideKick{
 	protected void reward(int amount){
 		super.reward(amount);
 
-		clones = null;
+		clones = new Minion[3];
 
 	}
 
@@ -212,9 +211,8 @@ class Knight extends SideKick{
 		super(2);
 		if (price > baseCost){
 			price -= baseCost;
+			this.increasePower(price);
 		}
-
-		this.increasePower(price);
 	}
 
 	@Override
