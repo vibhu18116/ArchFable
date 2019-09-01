@@ -25,6 +25,7 @@ abstract class Hero{
 	protected ArrayList<SideKick> _sidekicks = new ArrayList<SideKick>();
 	protected SideKick current_sidekick = null;
 	protected int thisLevelXP = 0;
+	protected boolean specialDefense = false;
 
 
 	protected Hero(int attack, int defense){
@@ -41,7 +42,15 @@ abstract class Hero{
 	}
 
 	String healthProfile(Monster m){
-		return "Your HP: " + df.format(this.getHP()) + "/" + this.getInitialHP() + " Monster HP: " + m.monsterHP();
+		if (this.current_sidekick == null){
+			return "Your HP: " + df.format(this.getHP()) + "/" + 
+				this.getInitialHP() + " Monster HP: " + m.monsterHP();
+		}
+		else{
+			return "Your HP: " + df.format(this.getHP()) + "/" + 
+				this.getInitialHP() + " Monster HP: " + m.monsterHP() + "\n" + 
+				this.current_sidekick.skHealth();
+		}
 	}
 
 	double getInitialHP(){
@@ -86,8 +95,12 @@ abstract class Hero{
 		return 0;
 	}
 
-	protected void activateSK(){
+	protected void activateSK(Monster m){
 		Collections.sort(_sidekicks);
+		if (this._sidekicks.size() == 0){
+			System.out.println("No sidekick available.");
+			return;
+		}
 		this.current_sidekick = _sidekicks.get(0);
 		System.out.println("You have a sidekick " + this.current_sidekick.getClass().getName()
 		+ " with you. Attack of sidekick is " + this.current_sidekick.getPower() + ".");
@@ -101,6 +114,10 @@ abstract class Hero{
 			}
 		}else{
 			this.current_sidekick = (Knight) this.current_sidekick;
+			if (m.getLevel() == 2){
+				specialDefense = true;
+				this.defense += this.current_sidekick.specialMove();
+			}
 		}
 	}
 
@@ -125,6 +142,7 @@ abstract class Hero{
 
 		}else{
 			SideKick purchased = _sidekicks.get(_sidekicks.size()-1);
+			this.XP -= exchangeXP;
 			System.out.println("You bought a sidekick: " + purchased.getClass().getName());
 			System.out.println("XP of sidekick: " + purchased.getXP());
 			System.out.println("Attack of sidekick is " + purchased.getPower());
@@ -135,6 +153,14 @@ abstract class Hero{
 
 	double attacked(double pow){
 		this.HP -= pow;
+
+		if (this.current_sidekick != null){
+			int y = this.current_sidekick.attacked(pow);
+			if (y == -1){
+				this.current_sidekick = null;
+				_sidekicks.remove(0);
+			}
+		} 
 		return this.HP;
 	}
 
@@ -161,11 +187,24 @@ abstract class Hero{
 
 	protected abstract void specialAttack(Monster m);
 
-	private void levelUp(Monster m){
+	private void awardXP(Monster m){
 		this.XP += m.getLevel()*20;
 		this.thisLevelXP += m.getLevel()*20;
 		System.out.println(m.getLevel()*20 + " XP awarded.");
+		this.HP = this.getInitialHP();
 
+		if (this.current_sidekick != null){
+			this.current_sidekick.reward(m.getLevel()*20);
+			this.current_sidekick = null;
+		}
+
+		if (this.specialAttack){
+			this.specialAttack = false;
+			this.defense -= this.current_sidekick.specialMove();
+		}
+	}
+
+	protected void levelUp(){
 		if (this.thisLevelXP >= 20 && currentLevel == 1){
 				currentLevel = 2;
 				this.thisLevelXP = 0;
@@ -195,7 +234,8 @@ abstract class Hero{
 
 		while (true){
 			if (res == -1){
-				levelUp(enemy);
+
+				awardXP(enemy);
 				res = 0;
 				return 1;
 			}

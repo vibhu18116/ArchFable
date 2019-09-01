@@ -55,6 +55,8 @@ class GamePlay{
 
 				if (answer.equals("yes")){
 					myHero.purchaseSideKick();
+				}else{
+					myHero.levelUp();
 				}
 
 				Monster success = possibleLocations(currentLocation, mons);
@@ -65,7 +67,7 @@ class GamePlay{
 					System.out.println("Type yes if you wish to use a sidekick, else type no.");
 					String use = sc.next();
 					if (use.equals("yes")){
-						myHero.activateSK();
+						myHero.activateSK(success);
 					}
 					myHero.fightOptions(success);
 				}
